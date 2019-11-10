@@ -1,51 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
+
 using Android.App;
 using Android.Content.PM;
+using Android.Runtime;
+using Android.Views;
+using Android.Widget;
 using Android.OS;
-using Esri.ArcGISRuntime.Data;
-using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.Location;
-using Esri.ArcGISRuntime.Mapping;
-using Esri.ArcGISRuntime.Security;
-using Esri.ArcGISRuntime.Symbology;
-using Esri.ArcGISRuntime.Tasks;
-using Esri.ArcGISRuntime.UI;
-using Esri.ArcGISRuntime.UI.Controls;
 
-namespace EscapapediaArcGIS
+namespace Escapapedia.Droid
 {
-    [Activity (Label = "@string/ApplicationName", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : Activity
+    [Activity(Label = "Escapapedia", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        MapViewModel _mapViewModel = new MapViewModel();
-        MapView _mapView;
-
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
 
-            // Set the view from the "Main" layout resource
-            SetContentView(Resource.Layout.Main);
+            base.OnCreate(savedInstanceState);
 
-            // Get MapView from the view and assign map from view-model
-            _mapView = FindViewById<MapView>(Resource.Id.MyMapView);
-            _mapView.Map = _mapViewModel.Map;
-
-            // Listen for changes on the view model
-            _mapViewModel.PropertyChanged += MapViewModel_PropertyChanged;
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            LoadApplication(new App());
         }
-
-        private void MapViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            // Update the map view with the view model's new map
-            if (e.PropertyName == "Map" && _mapView != null)
-                _mapView.Map = _mapViewModel.Map;
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
